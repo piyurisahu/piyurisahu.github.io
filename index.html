@@ -1,8 +1,482 @@
-<html>
-  <head>My personal website </head>
-  <title>Piyuri Sahu</title>
-  <body>
-    <h1>Hi I am Piyuri Sahu...Welcome to my online world</h1>
-  </body>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPO System Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            max-width: 1600px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .architecture-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            min-width: 1200px;
+        }
+        
+        .layer {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .layer-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .channel-layer .layer-title {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+        
+        .ppo-services .layer-title {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        
+        .core-app .layer-title {
+            background: linear-gradient(135deg, #00b894, #00a085);
+        }
+        
+        .downstream .layer-title {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+        }
+        
+        .database .layer-title {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        }
+        
+        .components {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .component {
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .component:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .channel {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+        
+        .ppo-service {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        
+        .inner-api {
+            background: linear-gradient(135deg, #00b894, #00a085);
+        }
+        
+        .core-service {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+        }
+        
+        .downstream-service {
+            background: linear-gradient(135deg, #e17055, #d63031);
+        }
+        
+        .database-component {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        }
+        
+        .flow-arrows {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 24px;
+            color: #74b9ff;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .description-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #74b9ff;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .feature-desc {
+            color: #5a6c7d;
+            font-size: 14px;
+        }
+        
+        .connection-lines {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .connection-line {
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #74b9ff, #0984e3);
+            position: relative;
+        }
+        
+        .connection-line::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: -3px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 8px solid #0984e3;
+        }
+        
+        .special-flow {
+            background: #fff3e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .special-flow-title {
+            font-weight: bold;
+            color: #f57c00;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .webhook-flow {
+            background: #f3e5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #9c27b0;
+        }
+        
+        .webhook-title {
+            font-weight: bold;
+            color: #7b1fa2;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .architecture-container {
+                min-width: auto;
+            }
+            
+            .components {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">💰 PPO SYSTEM ARCHITECTURE</div>
+        <div class="subtitle">
+            Retail application for customer money movement and payment orchestration with real-time processing capabilities, API integration, business rules, and event management streams for comprehensive retail payment activity.
+        </div>
+        
+        <div class="architecture-container">
+            <!-- Channel Layer -->
+            <div class="layer channel-layer">
+                <div class="layer-title">📱 CHANNEL LAYER</div>
+                <div class="components">
+                    <div class="component channel">WBB<br><small>Web Banking Business</small></div>
+                    <div class="component channel">WBA<br><small>Web Banking</small></div>
+                    <div class="component channel">MBL<br><small>Mobile Banking</small></div>
+                </div>
+                <div class="description-box">
+                    Channels use several PPO services to populate requests and access downstream information through proxy services.
+                </div>
+            </div>
+            
+            <div class="connection-lines">
+                <div class="connection-line"></div>
+            </div>
+            
+            <!-- PPO Services Layer -->
+            <div class="layer ppo-services">
+                <div class="layer-title">🔧 PPO PROXY SERVICES</div>
+                <div class="feature-list">
+                    <div class="feature">
+                        <div class="feature-title">💱 Currency Exchange</div>
+                        <div class="feature-desc">ppo-currency-exchange-pme<br>Provides exchange rates</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">🏦 Financial Gateway</div>
+                        <div class="feature-desc">ppo-financial-gateway-prs<br>Institution info and fees</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">📍 Location Data</div>
+                        <div class="feature-desc">ppo-location-data-management-prs<br>Bank location information</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">🌍 Wire Validation</div>
+                        <div class="feature-desc">ppo-selfservice-wire-app<br>International transfer validation</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connection-lines">
+                <div class="connection-line"></div>
+            </div>
+            
+            <!-- PPO Inner APIs -->
+            <div class="layer">
+                <div class="layer-title" style="background: linear-gradient(135deg, #00b894, #00a085); color: white;">🔗 PPO INNER APIs</div>
+                <div class="components">
+                    <div class="component inner-api">
+                        <strong>ppo-payment-order-inner</strong><br>
+                        <small>• Domestic Payment Order<br>
+                        • International Payment Order<br>
+                        • Domestic Cancel<br>
+                        • International Cancel</small>
+                    </div>
+                    <div class="component inner-api">
+                        <strong>ppo-payment-initiation-inner</strong><br>
+                        <small>• International Validation<br>
+                        • Payer Eligibility<br>
+                        • Add/Edit/Delete Payee</small>
+                    </div>
+                </div>
+                <div class="description-box">
+                    PPO Inners provide simple pass-throughs to the main application services in ppo-self-service-wire-app.
+                </div>
+            </div>
+            
+            <div class="connection-lines">
+                <div class="connection-line"></div>
+            </div>
+            
+            <!-- Core Application -->
+            <div class="layer core-app">
+                <div class="layer-title">⚙️ CORE APPLICATION - ppo-self-service-wire-app</div>
+                
+                <div class="feature-list">
+                    <div class="feature">
+                        <div class="feature-title">💱 FX Quote Check</div>
+                        <div class="feature-desc">Foreign exchange quote validation and processing</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">🌍 International Transfer Validation</div>
+                        <div class="feature-desc">Comprehensive validation for international payments</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">🚀 Payment Initiation</div>
+                        <div class="feature-desc">Real-time payment processing and orchestration</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">✅ Payer Eligibility</div>
+                        <div class="feature-desc">Account validation and eligibility checks</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">📊 Account Summary</div>
+                        <div class="feature-desc">Comprehensive account information provision</div>
+                    </div>
+                </div>
+                
+                <div class="special-flow">
+                    <div class="special-flow-title">🔄 Job Processors</div>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                        <div class="component core-service" style="min-width: 200px;">ppo-wire-dsp-jobprocessor</div>
+                        <div class="component core-service" style="min-width: 200px;">ppo-wire-jobprocessor</div>
+                    </div>
+                    <div style="margin-top: 10px; color: #f57c00;">
+                        Retry mechanisms for failed downstream calls to ensure data consistency.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="connection-lines">
+                <div class="connection-line"></div>
+            </div>
+            
+            <!-- Downstream Services -->
+            <div class="layer downstream">
+                <div class="layer-title">🔗 DOWNSTREAM SERVICES</div>
+                <div class="components">
+                    <div class="component downstream-service">BRE<br><small>Validate Payer Eligibility</small></div>
+                    <div class="component downstream-service">COS<br><small>Account Information</small></div>
+                    <div class="component downstream-service">AEA<br><small>Customer Limits</small></div>
+                    <div class="component downstream-service">DSP<br><small>Transaction Information</small></div>
+                    <div class="component downstream-service">EFG<br><small>Fraud Assessment</small></div>
+                    <div class="component downstream-service">PME<br><small>Payment Processing</small></div>
+                </div>
+                <div class="description-box">
+                    <strong>PME</strong> is the ultimate decision maker for payment completion, failure, or rejection. Other services provide validation, fraud checking, and account management capabilities.
+                </div>
+            </div>
+            
+            <div class="connection-lines">
+                <div class="connection-line"></div>
+            </div>
+            
+            <!-- Database Layer -->
+            <div class="layer database">
+                <div class="layer-title">🗄️ PPO DATABASE</div>
+                <div class="feature-list">
+                    <div class="feature">
+                        <div class="feature-title">📊 Payment Status</div>
+                        <div class="feature-desc">Current status tracking for all payments</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">👤 Payer Information</div>
+                        <div class="feature-desc">Complete payer details and history</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">💳 Payee Information</div>
+                        <div class="feature-desc">Payee details and relationship data</div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-title">📋 Call Audit Trail</div>
+                        <div class="feature-desc">Request and outcome records for every downstream call</div>
+                    </div>
+                </div>
+                <div class="description-box">
+                    Complex relational database structure maintaining comprehensive payment lifecycle information and audit trails.
+                </div>
+            </div>
+            
+            <!-- PME Webhook Flow -->
+            <div class="webhook-flow">
+                <div class="webhook-title">🔄 PME WEBHOOK INTEGRATION</div>
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <strong>PME Decision Callback Process:</strong>
+                    <ol style="margin: 10px 0; padding-left: 20px; color: #5a6c7d;">
+                        <li><span class="highlight">Payment Decision</span> - PME determines completion, failure, or rejection</li>
+                        <li><span class="highlight">Webhook Call</span> - PME calls wire app's update payment status endpoint</li>
+                        <li><span class="highlight">Database Update</span> - Payment status updated in PPO database</li>
+                        <li><span class="highlight">DSP Notification</span> - Updated payment information sent to DSP</li>
+                        <li><span class="highlight">AEA Reversion</span> - Account limits reverted if payment failed/rejected</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <!-- Key Features Summary -->
+            <div style="background: #e8f5e8; border-radius: 15px; padding: 25px; margin-top: 30px;">
+                <h3 style="color: #2e7d32; margin-top: 0; text-align: center;">🎯 KEY SYSTEM CAPABILITIES</h3>
+                <div class="feature-list">
+                    <div class="feature" style="border-left-color: #4caf50;">
+                        <div class="feature-title">⚡ Real-time Processing</div>
+                        <div class="feature-desc">Immediate payment processing with live status updates</div>
+                    </div>
+                    <div class="feature" style="border-left-color: #4caf50;">
+                        <div class="feature-title">🔄 Retry Mechanisms</div>
+                        <div class="feature-desc">Robust job processors ensure eventual consistency</div>
+                    </div>
+                    <div class="feature" style="border-left-color: #4caf50;">
+                        <div class="feature-title">🛡️ Comprehensive Validation</div>
+                        <div class="feature-desc">Multi-layer validation including fraud, eligibility, and limits</div>
+                    </div>
+                    <div class="feature" style="border-left-color: #4caf50;">
+                        <div class="feature-title">🌐 Multi-Channel Support</div>
+                        <div class="feature-desc">Unified API layer serving web and mobile channels</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
