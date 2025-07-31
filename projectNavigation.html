@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Order Processes - Domestic</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .process-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .process-step {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .sub-steps {
+            margin-left: 20px;
+            border-left: 2px dashed #74b9ff;
+            padding-left: 20px;
+        }
+        
+        .sub-step {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .sub-step-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 5px;
+        }
+        
+        .sub-step-description {
+            color: #5a6c7d;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .validation-box {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .service-layer-box {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .eligibility-box {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .fraud-box {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .storage-box {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .api-call {
+            display: inline-block;
+            background: #74b9ff;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 24px;
+            color: #74b9ff;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .conditional {
+            border: 2px dashed #fd79a8;
+            background: rgba(253, 121, 168, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .conditional-title {
+            font-weight: bold;
+            color: #e84393;
+            margin-bottom: 8px;
+        }
+        
+        .process-selector {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .process-selector:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(116, 185, 255, 0.4);
+        }
+        
+        .process-selector.active {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            box-shadow: 0 8px 20px rgba(253, 121, 168, 0.4);
+        }
+        
+        .process-container {
+            display: none;
+        }
+        
+        .process-container.active {
+            display: block;
+        }
+        
+        .international-note {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .sub-steps {
+                margin-left: 10px;
+                padding-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">💳 PAYMENT ORDER PROCESSES</div>
+        
+        <!-- Process Type Selector -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <button onclick="showDomestic()" id="domesticBtn" class="process-selector active">🏠 DOMESTIC</button>
+            <button onclick="showInternational()" id="internationalBtn" class="process-selector">🌍 INTERNATIONAL</button>
+            <button onclick="showCancellation()" id="cancellationBtn" class="process-selector">❌ CANCELLATION</button>
+        </div>
+        
+        
+        <div id="domesticProcess" class="process-container active">
+        <div class="process-flow">
+            <!-- Step 1: Field Level Validation -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">1</div>
+                    Field Level Validation
+                </div>
+                <div class="validation-box">
+                    <div class="sub-step-title">Validation Types:</div>
+                    <div class="sub-step-description">
+                        • <span class="highlight">Standing Order Validation:</span> Separate validation if it's a standing order (recurring payment marked with standingOrderInstructionIndicator = true in the header - NOT currently used by channels or in production)<br>
+                        • <span class="highlight">Same Day Payment:</span> Specific validation for same-day payments
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 2: Service Layer Setup -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">2</div>
+                    Service Layer Setup
+                </div>
+                <div class="service-layer-box">
+                    <div class="sub-step-title">CommonHelper Object Creation</div>
+                    <div class="sub-step-description">
+                        Moving into the service layer, we set up a <span class="highlight">CommonHelper object</span> which will carry key pieces of payment information throughout the process.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 3: Payee Validation -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">3</div>
+                    Payee Validation
+                </div>
+                <div class="sub-step">
+                    <div class="sub-step-description">
+                        If the user is reusing a payee, we will validate that payee's existence from the database
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 4: Payer Eligibility Flow -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">4</div>
+                    Payer Eligibility Flow
+                </div>
+                <div class="eligibility-box">
+                    <div class="sub-steps">
+                        <div class="sub-step">
+                            <div class="sub-step-title">4.1 CommonHelper Setup</div>
+                            <div class="sub-step-description">A new common helper object is set up for similar reasons as above</div>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-title">4.2 Account Balance Check</div>
+                            <div class="sub-step-description">
+                                Invoke <span class="api-call">COS</span> or <span class="api-call">MPC</span> to get account balance for given payer details. Right now, we are only utilizing <span class="api-call">COS</span>, but <span class="api-call">MPC</span> will be used in the near future.
+                            </div>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-title">4.3 Payment Cut-off Time</div>
+                            <div class="sub-step-description"><span class="api-call">BRE</span> is called to validate the cut off time for payment cancellation</div>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-title">4.4 Account Limits</div>
+                            <div class="sub-step-description"><span class="api-call">AEA</span> is called to retrieve account limits</div>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-title">4.5 Account Eligibility Check</div>
+                            <div class="sub-step-description"><span class="api-call">BRE</span> is called again to check payer account eligibility</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 5: Duplicate Payment Check -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">5</div>
+                    Duplicate Payment Check
+                </div>
+                <div class="sub-step">
+                    <div class="sub-step-description">
+                        We scan both the <span class="highlight">immediate payment table</span> (where same day business hour payments are stored) and <span class="highlight">standing order tables</span> (where recurring payments or same day but after hours payments are stored) to find if the given payment is a duplicate based off of the payer account (cdmPartyIdentifier), the effective date of the payment, the amount, as well as the payee's account and routing number. I am currently in the process of ensuring that only active records are factored in, and that rejected or cancelled payments will not be flagged as duplicate.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 6: Customer Classification -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">6</div>
+                    Customer Classification
+                </div>
+                <div class="sub-step">
+                    <div class="sub-step-description">
+                        Customer's classification (regular consumer, business, or wealth) is also packaged into the common helper object based on what was returned in the payer eligibility call
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 7: Fraud Assessment -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">7</div>
+                    Fraud Assessment
+                </div>
+                <div class="fraud-box">
+                    <div class="sub-steps">
+                        <div class="sub-step">
+                            <div class="sub-step-title">7.1 Data Population</div>
+                            <div class="sub-step-description">Much of fraud assessment's data is populated by the supplementaryData field in the initial request</div>
+                        </div>
+                        <div class="sub-step">
+                            <div class="sub-step-title">7.2 Fraud Check</div>
+                            <div class="sub-step-description">All necessary data is passed to <span class="api-call">EFG</span> for the fraud check</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 8: Business Hours Payment Storage -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">8</div>
+                    Business Hours Payment Processing
+                </div>
+                <div class="conditional">
+                    <div class="conditional-title">⏰ IF payment is occurring within business hours:</div>
+                    <div class="storage-box">
+                        <div class="sub-step-description">
+                            It is stored in the <span class="highlight">immediate payment table</span> along with payer and payee information if it's not already there.
+                        </div>
+                        <div class="sub-steps">
+                            <div class="sub-step">
+                                <div class="sub-step-title">8.1 PME Notification</div>
+                                <div class="sub-step-description">Payment is sent to <span class="api-call">PME</span></div>
+                            </div>
+                            <div class="sub-step">
+                                <div class="sub-step-title">8.2 DSP Kafka Topic</div>
+                                <div class="sub-step-description">Payment information is sent to DSP Kafka's <span class="highlight">INGESTED.PaymentOrder.PPO topic</span></div>
+                            </div>
+                            <div class="sub-step">
+                                <div class="sub-step-title">8.3 Account Limits Update</div>
+                                <div class="sub-step-description">Updated account limits are posted to <span class="api-call">AEA</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">⬇️</div>
+
+            <!-- Step 9: After Hours/Future Dated Payment -->
+            <div class="process-step">
+                <div class="step-title">
+                    <div class="step-number">9</div>
+                    After Hours/Future Dated Payment Processing
+                </div>
+                <div class="conditional">
+                    <div class="conditional-title">🌙 IF payment is after business hours or future dated:</div>
+                    <div class="storage-box">
+                        <div class="sub-step-description">
+                            It will be stored instead in the <span class="highlight">standing order table</span> where a scheduler will push it through for processing and to <span class="api-call">PME</span> at 3:01 AM on its effective date.
+                        </div>
+                        <div class="sub-steps">
+                            <div class="sub-step">
+                                <div class="sub-step-title">9.1 Kafka Topics</div>
+                                <div class="sub-step-description">
+                                    Payment information is sent to DSP Kafka's <span class="highlight">INGESTED.PaymentInstruction.PPO topic</span>, as well as the <span class="highlight">INGESTED.ServicingOrder.PPO topic</span>
+                                </div>
+                            </div>
+                            <div class="sub-step">
+                                <div class="sub-step-title">9.2 Limits Update</div>
+                                <div class="sub-step-description">Updated limits are posted to <span class="api-call">AEA</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="process-step" style="border-left: 5px solid #e17055;">
+                <div class="step-title">
+                    <div class="step-number">ℹ️</div>
+                    Additional Notes
+                </div>
+                <div class="sub-step">
+                    <div class="sub-step-description">
+                        <strong>DSP Integration:</strong> The output model is set up for DSP services/channels. Any of the above DSP calls may try to call the PDO's DSP job processor for a retry.
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <!-- International Process -->
+        <div id="internationalProcess" class="process-container">
+            <div class="international-note">
+                🌍 INTERNATIONAL PAYMENT PROCESSING - INITIAL FLOW
+            </div>
+            
+            <div class="process-flow">
+                <!-- Step 1: Input Model Adjustments -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">1</div>
+                        Input Model Adjustments
+                    </div>
+                    <div class="validation-box">
+                        <div class="sub-step-description">
+                            Adjustments are made to the input model to make sure items with a <span class="highlight">date time format</span> are consistent, and that <span class="highlight">BIC values</span> are properly formatted.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 2: Payee Reuse Check -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">2</div>
+                        Payee Reuse Determination
+                    </div>
+                    <div class="sub-step">
+                        <div class="sub-step-description">
+                            Determine if reusing an existing payee
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 3: Field Level Validation -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">3</div>
+                        Field Level Validation
+                    </div>
+                    <div class="validation-box">
+                        <div class="sub-step-description">
+                            Field level validation is performed - this will vary depending on if the transaction is <span class="highlight">SWIFT</span> (btsIndicator = false) or <span class="highlight">PGT</span> (btsIndicator = true).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 4: Payee Information Validation -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">4</div>
+                        Payee Information Validation
+                    </div>
+                    <div class="sub-step">
+                        <div class="sub-step-description">
+                            Payee information is validated if an existing payee is reused
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 5: FX Quote Identifier Check -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">5</div>
+                        FX Quote Identifier Check
+                    </div>
+                    <div class="service-layer-box">
+                        <div class="sub-step-description">
+                            Check is performed for <span class="highlight">fxQuoteIdentifier</span> - this value is required for cross-currency SWIFT transactions I believe, but need to double check.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 6: Confirmation Number Generation -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">6</div>
+                        Confirmation Number Generation
+                    </div>
+                    <div class="sub-step">
+                        <div class="sub-step-description">
+                            Confirmation number is generated for the transaction if it is not already being sent in the request
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 7: Common Helper Setup -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">7</div>
+                        Common Helper Setup
+                    </div>
+                    <div class="service-layer-box">
+                        <div class="sub-step-description">
+                            Common helper object is set up, similarly to domestic
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 8: Payer Eligibility Check -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">8</div>
+                        Payer Eligibility Check
+                    </div>
+                    <div class="eligibility-box">
+                        <div class="sub-step-description">
+                            Payer eligibility check occurs - proceeds mostly the same as domestic's
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 9: Cut Off Time -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">9</div>
+                        Cut Off Time Validation
+                    </div>
+                    <div class="sub-step">
+                        <div class="sub-step-description">
+                            Cut off time for cancellation is set
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 10: International Limits Validation -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">10</div>
+                        International Limits Validation
+                    </div>
+                    <div class="eligibility-box">
+                        <div class="sub-step-description">
+                            Additional validation occurs of the response from the payer eligibility check to ensure that <span class="highlight">account limits are not breached</span> for the type of international wire occurring (<span class="api-call">SWIFT</span>, <span class="api-call">PGT</span> but not <span class="api-call">BBVA</span>, <span class="api-call">PGT BBVA</span>).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 11: Fraud Assessment -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">11</div>
+                        Fraud Assessment
+                    </div>
+                    <div class="fraud-box">
+                        <div class="sub-step-description">
+                            Fraud assessment occurs, similarly to domestic's
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 12: FX Processing -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">12</div>
+                        FX Processing
+                    </div>
+                    <div class="conditional">
+                        <div class="conditional-title">💱 IF fxQuoteIdentifier is within the transaction:</div>
+                        <div class="service-layer-box">
+                            <div class="sub-steps">
+                                <div class="sub-step">
+                                    <div class="sub-step-title">12.1 FX Save Endpoint</div>
+                                    <div class="sub-step-description">A call is made to <span class="api-call">PME's fx save endpoint</span></div>
+                                </div>
+                                <div class="sub-step">
+                                    <div class="sub-step-title">12.2 Fallback Fraud Assessment</div>
+                                    <div class="sub-step-description">If that failed, another fraud assessment call is initiated</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 13: Payment Storage -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">13</div>
+                        Payment Information Storage
+                    </div>
+                    <div class="storage-box">
+                        <div class="sub-step-description">
+                            The <span class="highlight">immediate payment, fx save information</span> if relevant, and <span class="highlight">payer/payee information</span> is saved to the database - the immediate payment will have a current status of <span class="highlight">PENDING</span>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 14: DSP Kafka Integration -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">14</div>
+                        DSP Kafka Integration
+                    </div>
+                    <div class="storage-box">
+                        <div class="sub-step-description">
+                            Payment information is sent to DSP Kafka's <span class="highlight">INGESTED.PaymentOrder.PPO topic</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 15: Retry Mechanism -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">15</div>
+                        Retry Mechanism
+                    </div>
+                    <div class="conditional">
+                        <div class="conditional-title">⚠️ IF the above failed:</div>
+                        <div class="fraud-box">
+                            <div class="sub-step-description">
+                                The DSP request is sent to <span class="highlight">PPO's DSP job processor</span> for later retry
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">⬇️</div>
+
+                <!-- Step 16: Output Model -->
+                <div class="process-step">
+                    <div class="step-title">
+                        <div class="step-number">16</div>
+                        Output Model Return
+                    </div>
+                    <div class="service-layer-box">
+                        <div class="sub-step-description">
+                            Output model is returned
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="process-step" style="border-left: 5px solid #e17055;">
+                    <div class="step-title">
+                        <div class="step-number">ℹ️</div>
+                        DSP Integration Notes
+                    </div>
+                    <div class="sub-step">
+                        <div class="sub-step-description">
+                            <strong>Retry Mechanism:</strong> If any of the above DSP calls failed, they will be sent to PPO's DSP job processor for a retry.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Cancellation Process -->
+        <div id="cancellationProcess" class="process-container">
+            <div class="international-note">
+                ❌ PAYMENT CANCELLATION PROCESSES
+            </div>
+            
+            <!-- International Cancellation -->
+            <div style="background: #e3f2fd; border-radius: 15px; padding: 25px; margin-bottom: 30px;">
+                <h3 style="color: #1976d2; margin-top: 0; text-align: center;">🌍 INTERNATIONAL CANCELLATION</h3>
+                
+                <div class="process-flow">
+                    <!-- Step 1: PPO Validation -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">1</div>
+                            PPO Validation
+                        </div>
+                        <div class="validation-box">
+                            <div class="sub-step-description">
+                                PPO validation happens. We check for <span class="highlight">valid cancellation reasons</span>, and make sure the attempted cancellation is not a <span class="highlight">small business</span> - small business cancellations are prohibited for international.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 2: Database Pull -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">2</div>
+                            Payment Database Retrieval
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                In the service layer, we pull the <span class="highlight">immediate payment from the database</span>. Only payments that are in a <span class="highlight">pending state</span> can be cancelled, and we also need to make sure the <span class="highlight">mdmPartyId</span> of the payment matches the one being sent in the cancellation request - this represents the user.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 3: FX Quote Check -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">3</div>
+                            FX Quote Information Retrieval
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                If the transfer was <span class="highlight">cross currency</span> and has an entry in the <span class="highlight">immediatePaymentFxQuote table</span>, that information will be pulled as well so a cancel trade call can eventually be made.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 4: CommonHelper Setup -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">4</div>
+                            CommonHelper Setup
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                A <span class="highlight">CommonHelperDto object</span> is set up to carry key pieces of information throughout the process.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 5: BRE Timeframe Check -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">5</div>
+                            Cancellation Timeframe Validation
+                        </div>
+                        <div class="eligibility-box">
+                            <div class="sub-step-description">
+                                A call is made to <span class="api-call">BRE</span> to check if the payment is still within the <span class="highlight">cancellation timeframe (40 minutes)</span>. If it's outside this window, the payment cannot be cancelled.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 6: Fraud Assessment -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">6</div>
+                            Fraud Assessment
+                        </div>
+                        <div class="fraud-box">
+                            <div class="sub-step-description">
+                                If the payment is eligible for cancellation, another <span class="highlight">fraud assessment call</span> will be made to <span class="api-call">EFG</span>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 7: Database Update -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">7</div>
+                            Payment Status Update
+                        </div>
+                        <div class="storage-box">
+                            <div class="sub-step-description">
+                                The <span class="highlight">immediate payment record</span> will then be updated in the database to reflect the cancellation status.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 8: FX Cancel Trade -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">8</div>
+                            FX Cancel Trade Call
+                        </div>
+                        <div class="conditional">
+                            <div class="conditional-title">💱 IF immediatePaymentFxQuote record exists:</div>
+                            <div class="service-layer-box">
+                                <div class="sub-step-description">
+                                    Then a <span class="highlight">cancel trade call</span> will be made to <span class="api-call">PME</span>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 9: DSP Notification -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">9</div>
+                            Customer Notification
+                        </div>
+                        <div class="storage-box">
+                            <div class="sub-step-description">
+                                Updated payment status and information will be sent to <span class="highlight">DSP</span> to be viewed by the customer.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 10: AEA Limit Reversion -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">10</div>
+                            Account Limit Reversion
+                        </div>
+                        <div class="eligibility-box">
+                            <div class="sub-step-description">
+                                <span class="api-call">AEA</span> limit changes made during the initial payment will be reverted.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 11: Response Model -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">11</div>
+                            Response Model Creation
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                Response model is created to return to the channels.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Domestic Cancellation -->
+            <div style="background: #fff3e0; border-radius: 15px; padding: 25px;">
+                <h3 style="color: #f57c00; margin-top: 0; text-align: center;">🏠 DOMESTIC CANCELLATION</h3>
+                
+                <div class="process-flow">
+                    <!-- Step 1: Eligibility Check -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">1</div>
+                            Cancellation Eligibility
+                        </div>
+                        <div class="validation-box">
+                            <div class="sub-step-description">
+                                Only <span class="highlight">future-dated</span> or <span class="highlight">after hours transfers</span> can be cancelled - same day payments made during business hours are not eligible for cancellation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 2: PPO Validation -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">2</div>
+                            PPO Validation
+                        </div>
+                        <div class="validation-box">
+                            <div class="sub-step-description">
+                                Cancellation reason undergoes similar <span class="highlight">PPO validation</span> as international. Other than that, the only validation that happens within the validator class is to ensure that required fields are present.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 3: Standing Order Retrieval -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">3</div>
+                            Standing Order Retrieval
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                The <span class="highlight">standing order</span> will be pulled from the database - we make sure it's in a <span class="highlight">pending state</span>, and has not exceeded its cancellation time frame, marked by a <span class="highlight">cancelUntilDt field</span> in the database. As with international, we also make sure the <span class="highlight">mdmPartyId's</span> of the original and the cancellation request match.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 4: Supplementary Data -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">4</div>
+                            Supplementary Data Retrieval
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                <span class="highlight">supplementaryData</span> is pulled from the standing order record in order to set up for another fraud assessment.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 5: Fraud Assessment -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">5</div>
+                            Fraud Assessment
+                        </div>
+                        <div class="fraud-box">
+                            <div class="sub-step-description">
+                                Fraud assessment is sent to <span class="api-call">EFG</span>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 6: CommonHelper Setup -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">6</div>
+                            CommonHelper Setup
+                        </div>
+                        <div class="service-layer-box">
+                            <div class="sub-step-description">
+                                <span class="highlight">CommonHelperDto object</span> is set up to carry key pieces of information where needed.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 7: Database Update -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">7</div>
+                            Standing Order Update
+                        </div>
+                        <div class="storage-box">
+                            <div class="sub-step-description">
+                                <span class="highlight">Standing order record</span> is updated in the database to reflect the cancellation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 8: AEA Limit Reversion -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">8</div>
+                            Limit Changes Reversion
+                        </div>
+                        <div class="eligibility-box">
+                            <div class="sub-step-description">
+                                A call is made to <span class="api-call">AEA</span> through our job processor to revert limit changes made from the original payment.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 9: DSP Updates -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">9</div>
+                            DSP Topic Updates
+                        </div>
+                        <div class="storage-box">
+                            <div class="sub-step-description">
+                                Updates are sent to DSP's <span class="highlight">INGESTED.PaymentOrder.PPO</span> and <span class="highlight">INGESTED.ServicingOrder.PPO topic</span>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">⬇️</div>
+
+                    <!-- Step 10: Retry Mechanism -->
+                    <div class="process-step">
+                        <div class="step-title">
+                            <div class="step-number">10</div>
+                            Retry Handling
+                        </div>
+                        <div class="conditional">
+                            <div class="conditional-title">⚠️ IF the calls fail:</div>
+                            <div class="fraud-box">
+                                <div class="sub-step-description">
+                                    The DSP job processor will handle them for retry later.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function showDomestic() {
+                document.getElementById('domesticProcess').classList.add('active');
+                document.getElementById('internationalProcess').classList.remove('active');
+                document.getElementById('cancellationProcess').classList.remove('active');
+                document.getElementById('domesticBtn').classList.add('active');
+                document.getElementById('internationalBtn').classList.remove('active');
+                document.getElementById('cancellationBtn').classList.remove('active');
+            }
+            
+            function showInternational() {
+                document.getElementById('domesticProcess').classList.remove('active');
+                document.getElementById('internationalProcess').classList.add('active');
+                document.getElementById('cancellationProcess').classList.remove('active');
+                document.getElementById('domesticBtn').classList.remove('active');
+                document.getElementById('internationalBtn').classList.add('active');
+                document.getElementById('cancellationBtn').classList.remove('active');
+            }
+            
+            function showCancellation() {
+                document.getElementById('domesticProcess').classList.remove('active');
+                document.getElementById('internationalProcess').classList.remove('active');
+                document.getElementById('cancellationProcess').classList.add('active');
+                document.getElementById('domesticBtn').classList.remove('active');
+                document.getElementById('internationalBtn').classList.remove('active');
+                document.getElementById('cancellationBtn').classList.add('active');
+            }
+        </script>
+    </div>
+</body>
+</html>
