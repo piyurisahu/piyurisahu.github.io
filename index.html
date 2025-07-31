@@ -3,41 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three Button Navigation</title>
+    <title>Project Navigation System</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
             padding: 20px;
+            color: #333;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
             border-radius: 20px;
+            padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            text-align: center;
             backdrop-filter: blur(10px);
         }
 
         h1 {
+            text-align: center;
             color: #333;
             margin-bottom: 30px;
             font-size: 2.5em;
             font-weight: 300;
         }
 
-        .button-container {
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .main-buttons {
             display: flex;
             gap: 20px;
-            flex-wrap: wrap;
             justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
         }
 
         .nav-button {
@@ -103,17 +112,160 @@
             box-shadow: 0 12px 25px rgba(254, 202, 87, 0.4);
         }
 
-        .demo-content {
-            margin-top: 40px;
-            padding: 30px;
+        .btn-project {
+            background: linear-gradient(45deg, #a855f7, #3b82f6);
+            color: white;
+            box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-project:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(168, 85, 247, 0.4);
+        }
+
+        .project-section {
+            display: none;
+            animation: slideDown 0.5s ease-out;
             background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            border: 2px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .project-section.active {
+            display: block;
+        }
+
+        .project-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 400;
+        }
+
+        .ppo-section {
+            display: none;
+            animation: slideDown 0.5s ease-out;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .ppo-section.active {
+            display: block;
+        }
+
+        .ppo-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+        .btn-ppo {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+            margin: 0 auto;
+            display: block;
+        }
+
+        .btn-ppo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .alphabet-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .alphabet-btn {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alphabet-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .alphabet-btn:hover::before {
+            left: 100%;
+        }
+
+        .alphabet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .content-area {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             display: none;
         }
 
-        .demo-content.active {
+        .content-area.active {
             display: block;
             animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-area h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .content-area p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes fadeIn {
@@ -121,80 +273,225 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .demo-content h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .demo-content p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 600px) {
-            .button-container {
+        @media (max-width: 768px) {
+            .main-buttons {
                 flex-direction: column;
                 align-items: center;
             }
             
             .nav-button {
-                width: 200px;
+                width: 250px;
+            }
+
+            .alphabet-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Navigation Demo</h1>
-        <div class="button-container">
-            <button class="nav-button btn-home" onclick="window.location.href = 'home.html'">
-                PPO
+        <h1>Project Navigation System</h1>
+        
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" id="breadcrumb">
+            Home
+        </div>
+
+        <!-- Main Navigation -->
+        <div class="main-buttons">
+            <button class="nav-button btn-home" onclick="showMainContent('home')">
+                🏠 Home Page
             </button>
-            <button class="nav-button btn-about" onclick="showContent('about')">
+            <button class="nav-button btn-about" onclick="showMainContent('about')">
                 ℹ️ About Us
             </button>
-            <button class="nav-button btn-contact" onclick="showContent('contact')">
+            <button class="nav-button btn-contact" onclick="showMainContent('contact')">
                 📧 Contact
+            </button>
+            <button class="nav-button btn-project" onclick="toggleProject()">
+                📁 Projects
             </button>
         </div>
 
-        <!-- Demo content sections -->
-       
+        <!-- Project Section -->
+        <div id="project-section" class="project-section">
+            <h2 class="project-title">Available Projects</h2>
+            <button class="nav-button btn-ppo" onclick="togglePPO()">
+                🎯 PPO Project
+            </button>
 
-        <div id="about-content" class="demo-content">
-            <h2>About Us</h2>
-            <p>This is the about page content. Here you would typically find information about your company, team, mission, and values.</p>
-            <p>In a real implementation, clicking this button would navigate to <strong>about.html</strong></p>
+            <!-- PPO Project Section -->
+            <div id="ppo-section" class="ppo-section">
+                <h3 class="ppo-title">PPO Project - Select Module</h3>
+                <div class="alphabet-buttons">
+                    <button class="alphabet-btn" onclick="showAlphabetContent('A')">A</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('B')">B</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('C')">C</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('D')">D</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('E')">E</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('F')">F</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('G')">G</button>
+                    <button class="alphabet-btn" onclick="showAlphabetContent('H')">H</button>
+                </div>
+            </div>
         </div>
 
-        <div id="contact-content" class="demo-content">
+        <!-- Content Area -->
+        <div id="content-area" class="content-area active">
+            <h2>Welcome to the Project Navigation System</h2>
+            <p>This is a hierarchical navigation system that demonstrates multi-level menu structures:</p>
+            <p><strong>Navigation Flow:</strong></p>
+            <p>1. Click on "Projects" to see available projects</p>
+            <p>2. Click on "PPO Project" to see the module options</p>
+            <p>3. Click on any letter (A-H) to navigate to that specific module</p>
+            <p>Each letter button would typically navigate to a separate HTML file like <code>ppo-module-a.html</code>, <code>ppo-module-b.html</code>, etc.</p>
+        </div>
+
+        <!-- Dynamic content sections for main navigation -->
+        <div id="home-content" class="content-area">
+            <h2>Home Page</h2>
+            <p>Welcome to the home page. This is the main landing area of your website.</p>
+            <p>In a real implementation, this would be <strong>home.html</strong></p>
+        </div>
+
+        <div id="about-content" class="content-area">
+            <h2>About Us</h2>
+            <p>Learn more about our company, mission, and values.</p>
+            <p>In a real implementation, this would be <strong>about.html</strong></p>
+        </div>
+
+        <div id="contact-content" class="content-area">
             <h2>Contact Information</h2>
-            <p>This is the contact page where users can find ways to get in touch with you. It might include contact forms, email addresses, phone numbers, and office locations.</p>
-            <p>In a real implementation, clicking this button would navigate to <strong>contact.html</strong></p>
+            <p>Get in touch with us through various contact methods.</p>
+            <p>In a real implementation, this would be <strong>contact.html</strong></p>
+        </div>
+
+        <!-- Dynamic content sections for alphabet buttons -->
+        <div id="a-content" class="content-area">
+            <h2>PPO Project - Module A</h2>
+            <p>This is Module A of the PPO Project. Here you would find specific functionality and content related to Module A.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-a.html</strong></p>
+        </div>
+
+        <div id="b-content" class="content-area">
+            <h2>PPO Project - Module B</h2>
+            <p>This is Module B of the PPO Project. Here you would find specific functionality and content related to Module B.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-b.html</strong></p>
+        </div>
+
+        <div id="c-content" class="content-area">
+            <h2>PPO Project - Module C</h2>
+            <p>This is Module C of the PPO Project. Here you would find specific functionality and content related to Module C.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-c.html</strong></p>
+        </div>
+
+        <div id="d-content" class="content-area">
+            <h2>PPO Project - Module D</h2>
+            <p>This is Module D of the PPO Project. Here you would find specific functionality and content related to Module D.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-d.html</strong></p>
+        </div>
+
+        <div id="e-content" class="content-area">
+            <h2>PPO Project - Module E</h2>
+            <p>This is Module E of the PPO Project. Here you would find specific functionality and content related to Module E.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-e.html</strong></p>
+        </div>
+
+        <div id="f-content" class="content-area">
+            <h2>PPO Project - Module F</h2>
+            <p>This is Module F of the PPO Project. Here you would find specific functionality and content related to Module F.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-f.html</strong></p>
+        </div>
+
+        <div id="g-content" class="content-area">
+            <h2>PPO Project - Module G</h2>
+            <p>This is Module G of the PPO Project. Here you would find specific functionality and content related to Module G.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-g.html</strong></p>
+        </div>
+
+        <div id="h-content" class="content-area">
+            <h2>PPO Project - Module H</h2>
+            <p>This is Module H of the PPO Project. Here you would find specific functionality and content related to Module H.</p>
+            <p>In a real implementation, this would navigate to <strong>ppo-module-h.html</strong></p>
         </div>
     </div>
 
     <script>
-        function showContent(page) {
-            // Hide all content sections
-            const contents = document.querySelectorAll('.demo-content');
+        let currentSection = 'welcome';
+
+        function updateBreadcrumb(path) {
+            document.getElementById('breadcrumb').textContent = path;
+        }
+
+        function hideAllContent() {
+            const contents = document.querySelectorAll('.content-area');
             contents.forEach(content => {
                 content.classList.remove('active');
             });
-
-            // Show the selected content
-            const selectedContent = document.getElementById(page + '-content');
-            if (selectedContent) {
-                selectedContent.classList.add('active');
-            }
-
-            // In a real implementation, you would use:
-            // window.location.href = page + '.html';
         }
 
-        // Show home content by default
+        function showMainContent(section) {
+            hideAllContent();
+            currentSection = section;
+            
+            // Hide project sections
+            document.getElementById('project-section').classList.remove('active');
+            document.getElementById('ppo-section').classList.remove('active');
+            
+            // Show selected content
+            if (section === 'home') {
+                document.getElementById('home-content').classList.add('active');
+                updateBreadcrumb('Home');
+            } else if (section === 'about') {
+                document.getElementById('about-content').classList.add('active');
+                updateBreadcrumb('Home > About Us');
+            } else if (section === 'contact') {
+                document.getElementById('contact-content').classList.add('active');
+                updateBreadcrumb('Home > Contact');
+            }
+        }
+
+        function toggleProject() {
+            hideAllContent();
+            const projectSection = document.getElementById('project-section');
+            const ppoSection = document.getElementById('ppo-section');
+            
+            if (projectSection.classList.contains('active')) {
+                projectSection.classList.remove('active');
+                ppoSection.classList.remove('active');
+                document.getElementById('content-area').classList.add('active');
+                updateBreadcrumb('Home');
+            } else {
+                projectSection.classList.add('active');
+                updateBreadcrumb('Home > Projects');
+            }
+        }
+
+        function togglePPO() {
+            const ppoSection = document.getElementById('ppo-section');
+            if (ppoSection.classList.contains('active')) {
+                ppoSection.classList.remove('active');
+                updateBreadcrumb('Home > Projects');
+            } else {
+                ppoSection.classList.add('active');
+                updateBreadcrumb('Home > Projects > PPO Project');
+            }
+        }
+
+        function showAlphabetContent(letter) {
+            hideAllContent();
+            document.getElementById(letter.toLowerCase() + '-content').classList.add('active');
+            updateBreadcrumb(`Home > Projects > PPO Project > Module ${letter}`);
+            
+            // In a real implementation, you would navigate to the specific HTML file:
+            // window.location.href = `ppo-module-${letter.toLowerCase()}.html`;
+        }
+
+        // Initialize with welcome content
         document.addEventListener('DOMContentLoaded', function() {
-            showContent('home');
+            updateBreadcrumb('Home');
         });
     </script>
 </body>
